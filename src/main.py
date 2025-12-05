@@ -14,11 +14,13 @@ class Game:
         
         running = True
 
+        clock = pygame.time.Clock()
+
         while running:
+
             self.screen.fill('white')
 
-            frog.move()
-            frog.draw()
+            frog.process_keys()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
