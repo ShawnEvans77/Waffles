@@ -26,10 +26,6 @@ frame = 0
 for i in range(animation_steps):
     animation_list.append(sheet.get_image(i, 32, 32, 3, BLACK))
 
-frame_0 = sheet.get_image(0, 32, 32, 3, BLACK)
-frame_1 = sheet.get_image(1, 32, 32, 3, BLACK)
-frame_2 = sheet.get_image(2, 32, 32, 3, BLACK)
-
 while run:
 
     screen.fill(COLOR)
