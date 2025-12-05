@@ -1,40 +1,54 @@
 import pygame #type: ignore
+import sprite_sheet as ss
 
 pygame.init()
 
 size = width, height = 1000, 800
 screen = pygame.display.set_mode(size)
 
+player = pygame.Rect((75, 75, 100, 100))
+vel = 5
+sprite_sheet_image = pygame.image.load('idle.png').convert_alpha()
+
 run = True
 
-player = pygame.Rect((75, 75, 100, 100))
+COLOR = (255, 255, 255)
+BLACK = (0, 0, 0)
 
-vel = 5
+sheet = ss.SpriteSheet(sprite_sheet_image)
+
+animation_list = []
+animation_steps = 10
+last_update = pygame.time.get_ticks()
+animation_cooldown = 75
+frame = 0
+
+for i in range(animation_steps):
+    animation_list.append(sheet.get_image(i, 32, 32, 3, BLACK))
+
+frame_0 = sheet.get_image(0, 32, 32, 3, BLACK)
+frame_1 = sheet.get_image(1, 32, 32, 3, BLACK)
+frame_2 = sheet.get_image(2, 32, 32, 3, BLACK)
 
 while run:
 
-    color = (255, 255, 255)
+    screen.fill(COLOR)
 
-    screen.fill(color)
+    #update animation
+    current_time = pygame.time.get_ticks()
 
-    pygame.draw.rect(screen, (255, 0, 0), player)
+    if current_time - last_update >= animation_cooldown:
+        frame += 1
+        last_update = current_time
 
-    key = pygame.key.get_pressed()
+        if frame >= len(animation_list):
+            frame = 0
 
-    if key[pygame.K_LEFT] and player.x > 0:
-        player.move_ip(-1, 0)
-    elif key[pygame.K_RIGHT] and player.x < width - 100:
-        player.move_ip(1, 0)
-    elif key[pygame.K_UP] and player.y > 0:
-        player.move_ip(0, -1)
-    elif key[pygame.K_DOWN] and player.y < height - 100:
-        player.move_ip(0, 1)
-
+    screen.blit(animation_list[frame], (0, 0))
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-
-    print(player.y)
 
     pygame.display.update()
 

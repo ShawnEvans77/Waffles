@@ -1,0 +1,11 @@
+    # pygame.draw.rect(screen, (255, 0, 0), player)
+    # key = pygame.key.get_pressed()
+
+    # if key[pygame.K_LEFT] and player.x > 0:
+    #     player.move_ip(-1, 0)
+    # if key[pygame.K_RIGHT] and player.x < width - 100:
+    #     player.move_ip(1, 0)
+    # if key[pygame.K_UP] and player.y > 0:
+    #     player.move_ip(0, -1)
+    # if key[pygame.K_DOWN] and player.y < height - 100:
+    #     player.move_ip(0, 1)
