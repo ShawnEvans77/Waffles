@@ -25,9 +25,9 @@ while run:
         player.move_ip(-1, 0)
     elif key[pygame.K_RIGHT] and player.x < width - 100:
         player.move_ip(1, 0)
-    elif key[pygame.K_UP]:
+    elif key[pygame.K_UP] and player.y > 0:
         player.move_ip(0, -1)
-    elif key[pygame.K_DOWN]:
+    elif key[pygame.K_DOWN] and player.y < height - 100:
         player.move_ip(0, 1)
 
     for event in pygame.event.get():
