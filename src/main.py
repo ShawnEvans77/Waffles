@@ -10,14 +10,14 @@ class Game:
         pygame.display.set_caption('Waffles')
 
     def run(self):
-
         frog = player.Player(self.screen)
-        frog.prepare_ani()
-
+        
         running = True
 
         while running:
             self.screen.fill('white')
+
+            frog.move()
             frog.draw()
 
             for event in pygame.event.get():
