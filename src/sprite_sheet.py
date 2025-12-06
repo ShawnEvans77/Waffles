@@ -1,6 +1,12 @@
 import pygame #type: ignore
 
 class SpriteSheet():
+
+    HEIGHT = 32
+    WIDTH = 32
+    SCALE = 3
+    BACKGROUND = 'black'
+
     def __init__(self, image):
         self.sheet = image
     
@@ -10,3 +16,6 @@ class SpriteSheet():
         image = pygame.transform.scale(image, (width * scale, height * scale))
         image.set_colorkey(color)
         return image
+    
+    # def get_image(self):
+    #     return self.get_image(0, SpriteSheet.HEIGHT, SpriteSheet.WIDTH, SpriteSheet.SCALE, SpriteSheet.BACKGROUND)

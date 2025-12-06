@@ -4,53 +4,77 @@ import settings
 
 class Player():
 
-    HEIGHT = 32
-    WIDTH = 32
-    SCALE = 3
-    BACKGROUND = 'black'
-
     def __init__(self, screen):
-        self.sheet = ss.SpriteSheet(pygame.image.load('assets/idle.png').convert_alpha())
-        self.image = self.sheet.get_image(0, Player.HEIGHT, Player.WIDTH, Player.SCALE, Player.BACKGROUND)
-        # self.rect = self.image.get_rect()
-        self.screen = screen
-        self.idle = True
-        self.dx = 0
-        self.dy = 0
 
-    def prepare_ani(self):
-        self.frame_list = []
-        self.frames = [10, 10]
+        self.frames = []
+        self.screen = screen
+        self.frames.append(Player.fetch_frames('assets/idle.png', 10))
+        self.frames.append(Player.fetch_frames('assets/run.png', 10))
+
+
+
+
+        self.idle = True
+
+        # self.rect = self.image.get_rect()
+        self.idle = True
+
+        self.x = 0
+        self.y = 0
+
         self.last_update = pygame.time.get_ticks()
-        self.animation_cooldown = 75
+        self.animation_cooldown = 50
         self.frame = 0
+
+    @staticmethod
+    def fetch_frames(file_path: str, total_frames):
+        list = []
+
+        sheet = ss.SpriteSheet(pygame.image.load(file_path).convert_alpha())
+
+        for i in range(total_frames):
+            list.append(sheet.get_image(i, 32, 32, 3, 'black'))
+
+        return list
 
     def process_keys(self):
         key = pygame.key.get_pressed()
 
-        mv = 1
+        dx = 0
+        dy = 0
 
-        if key[pygame.K_LEFT] and self.dx > 0:
-            self.dx -= mv
-        if key[pygame.K_RIGHT] and self.dx < settings.WINDOW_WIDTH - 100:
-            self.dx += mv
-        if key[pygame.K_UP] and self.dy > 0:
-            self.dy -= mv
-        if key[pygame.K_DOWN] and self.dy < settings.WINDOW_HEIGHT - 100:
-            self.dy += mv
-   
+        self.idle = True
+
+        if key[pygame.K_LEFT] and self.x > 0:
+            dx = -1
+            self.x += dx
+            self.idle = False
+        if key[pygame.K_RIGHT] and self.x < settings.WINDOW_WIDTH - 100:
+            dx = 1
+            self.x += dx
+            self.idle = False
+        if key[pygame.K_UP] and self.y > 0:
+            dy = -1
+            self.y += dy
+        if key[pygame.K_DOWN] and self.y < settings.WINDOW_HEIGHT - 100:
+            dy = 1
+            self.y += dy
+
     def display(self):
 
-        self.screen.blit(self.image, (self.dx, self.dy))
+        if self.idle == False:
+            sprite_set = 1
+        else:
+            sprite_set = 0
 
-        # for i in range(self.frames):
-        #     self.frame_list.append(self.sheet.get_image(i, 32, 32, 3, 'black'))
+        self.current_time = pygame.time.get_ticks()
 
-        # self.current_time = pygame.time.get_ticks()
+        if self.current_time - self.last_update >= self.animation_cooldown:
+            self.frame += 1
 
-        # if self.current_time - self.last_update >= self.animation_cooldown:
-        #     self.frame += 1
-        #     self.last_update = self.current_time
+            self.last_update = self.current_time
 
-        #     if self.frame >= len(self.frame_list):
-        #         frame = 0
+            if self.frame >= len(self.frames[0]):
+                self.frame = 0
+
+        self.screen.blit(self.frames[sprite_set][self.frame], (self.x, self.y))
