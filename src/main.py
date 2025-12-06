@@ -20,6 +20,8 @@ class Game:
 
             self.screen.fill('white')
 
+            clock.tick(60)
+
             frog.process_keys()
             frog.display()
 
