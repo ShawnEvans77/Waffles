@@ -29,11 +29,7 @@ class Player():
         state = file_path[file_path.rfind('/')+1:file_path.index('.')]
 
         sheet = ss.SpriteSheet(file_path)
-
-        list = []
-
-        for frame in sheet:
-            list.append(frame)
+        list = [frame for frame in sheet]
 
         self.frames[state] = list
 
