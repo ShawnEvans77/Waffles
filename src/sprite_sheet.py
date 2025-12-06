@@ -17,5 +17,5 @@ class SpriteSheet():
         image.set_colorkey(color)
         return image
     
-    # def get_image(self):
-    #     return self.get_image(0, SpriteSheet.HEIGHT, SpriteSheet.WIDTH, SpriteSheet.SCALE, SpriteSheet.BACKGROUND)
+    def get_num_frames(self) -> int:
+        return self.sheet.get_width() // 32
