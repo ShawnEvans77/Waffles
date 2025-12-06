@@ -14,6 +14,9 @@ class Player():
         self.idle = True
         # self.rect = self.image.get_rect()
 
+        self.face_right = True
+        self.face_right = False
+
         self.x = 0
         self.y = 0
 
@@ -42,16 +45,20 @@ class Player():
 
         self.idle = True
 
-        mv = 5
+        mv = 2
 
         if key[pygame.K_LEFT] and self.x > 0:
             dx = -mv
             self.x += dx
             self.idle = False
+            self.face_right = False
+            self.face_left = True
         if key[pygame.K_RIGHT] and self.x < settings.WINDOW_WIDTH - 100:
             dx = mv
             self.x += dx
             self.idle = False
+            self.face_right = True
+            self.face_left = False
         if key[pygame.K_UP] and self.y > 0:
             dy = -mv
             self.y += dy
