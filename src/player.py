@@ -39,7 +39,7 @@ class Player():
         if key[pygame.K_DOWN] and self.dy < settings.WINDOW_HEIGHT - 100:
             self.dy += mv
    
-    def display(self, state):
+    def display(self):
 
         self.screen.blit(self.image, (self.dx, self.dy))
 

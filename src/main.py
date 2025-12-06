@@ -21,6 +21,7 @@ class Game:
             self.screen.fill('white')
 
             frog.process_keys()
+            frog.display()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
