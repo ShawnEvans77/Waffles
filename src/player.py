@@ -18,8 +18,6 @@ class Player():
         self.state = Player.IDLE
         self.face_right = True
 
-        # self.rect = self.image.get_rect()
-
         self.x = 0
         self.y = 0
 
@@ -73,4 +71,10 @@ class Player():
             if self.frame >= len(self.frames[self.state]):
                 self.frame = 0
 
-        self.screen.blit(self.frames[self.state][self.frame], (self.x, self.y))
+        image = self.frames[self.state][self.frame]
+
+        match self.face_right:
+            case False: out_frame = pygame.transform.flip(image, True, False)
+            case True: out_frame = image
+                
+        self.screen.blit(out_frame, (self.x, self.y))

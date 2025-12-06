@@ -19,7 +19,6 @@ class Game:
         while running:
 
             self.screen.fill('white')
-
             clock.tick(120)
 
             plyr.process_keys()
