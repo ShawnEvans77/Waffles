@@ -10,8 +10,10 @@ class Player():
 
     def __init__(self, screen):
         self.frames = {}
-        self.add_frames('assets/idle.png')
-        self.add_frames('assets/run.png')
+
+        self.add_frames('assets/pinky/idle.png')
+        self.add_frames('assets/pinky/run.png')
+
         self.screen = screen
         self.state = Player.IDLE
         self.face_right = True
@@ -28,7 +30,9 @@ class Player():
     def add_frames(self, file_path: str):
         list = []
 
-        state = file_path[file_path.index('/')+1:file_path.index('.')]
+        state = file_path[file_path.rfind('/')+1:file_path.index('.')]
+
+        print(state)
 
         sheet = ss.SpriteSheet(pygame.image.load(file_path).convert_alpha())
         num_frames = sheet.get_num_frames()
@@ -56,10 +60,8 @@ class Player():
             self.y += dy
 
         match dx:
-            case 0:
-                self.state = Player.IDLE
-            case _:
-                self.state = Player.RUN
+            case 0: self.state = Player.IDLE
+            case _: self.state = Player.RUN
 
     def display(self):
         self.current_time = pygame.time.get_ticks()
