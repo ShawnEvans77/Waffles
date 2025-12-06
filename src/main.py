@@ -10,7 +10,7 @@ class Game:
         pygame.display.set_caption('Waffles')
 
     def run(self):
-        frog = player.Player(self.screen)
+        plyr = player.Player(self.screen, 'frog')
         
         running = True
 
@@ -22,8 +22,8 @@ class Game:
 
             clock.tick(120)
 
-            frog.process_keys()
-            frog.display()
+            plyr.process_keys()
+            plyr.display()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

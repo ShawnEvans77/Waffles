@@ -8,11 +8,11 @@ class Player():
     RUN = 'run'
     VEL = 2
 
-    def __init__(self, screen):
+    def __init__(self, screen, skin: str):
         self.frames = {}
 
-        self.add_frames('assets/pinky/idle.png')
-        self.add_frames('assets/pinky/run.png')
+        self.add_frames(f'assets/{skin}/idle.png')
+        self.add_frames(f'assets/{skin}/run.png')
 
         self.screen = screen
         self.state = Player.IDLE
@@ -32,8 +32,6 @@ class Player():
 
         state = file_path[file_path.rfind('/')+1:file_path.index('.')]
 
-        print(state)
-
         sheet = ss.SpriteSheet(pygame.image.load(file_path).convert_alpha())
         num_frames = sheet.get_num_frames()
 
@@ -49,16 +47,18 @@ class Player():
         if key[pygame.K_LEFT] and self.x > 0:
             dx = -Player.VEL
             self.x += dx
+            self.face_right = False
         if key[pygame.K_RIGHT] and self.x < settings.WINDOW_WIDTH - 100:
             dx = Player.VEL
             self.x += dx
+            self.face_right = True
         if key[pygame.K_UP] and self.y > 0:
             dy = -Player.VEL
             self.y += dy
         if key[pygame.K_DOWN] and self.y < settings.WINDOW_HEIGHT - 100:
             dy = Player.VEL
             self.y += dy
-
+        
         match dx:
             case 0: self.state = Player.IDLE
             case _: self.state = Player.RUN
