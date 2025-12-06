@@ -26,15 +26,14 @@ class Player():
         self.frame = 0
 
     def add_frames(self, file_path: str):
-        list = []
-
         state = file_path[file_path.rfind('/')+1:file_path.index('.')]
 
-        sheet = ss.SpriteSheet(pygame.image.load(file_path).convert_alpha())
-        num_frames = sheet.get_num_frames()
+        sheet = ss.SpriteSheet(file_path)
 
-        for i in range(num_frames):
-            list.append(sheet.get_image(i, ss.SpriteSheet.WIDTH, ss.SpriteSheet.HEIGHT, ss.SpriteSheet.SCALE, ss.SpriteSheet.BACKGROUND))
+        list = []
+
+        for frame in sheet:
+            list.append(frame)
 
         self.frames[state] = list
 
@@ -71,10 +70,12 @@ class Player():
             if self.frame >= len(self.frames[self.state]):
                 self.frame = 0
 
+        # print(self.frame)
+
         image = self.frames[self.state][self.frame]
 
-        match self.face_right:
-            case False: out_frame = pygame.transform.flip(image, True, False)
-            case True: out_frame = image
+        # match self.face_right:
+        #     case False: out_frame = pygame.transform.flip(image, True, False)
+        #     case True: out_frame = image
                 
-        self.screen.blit(out_frame, (self.x, self.y))
+        self.screen.blit(image, (self.x, self.y))

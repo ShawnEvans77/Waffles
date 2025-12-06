@@ -10,16 +10,15 @@ class Game:
         pygame.display.set_caption('Waffles')
 
     def run(self):
-        plyr = player.Player(self.screen, 'frog')
+        plyr = player.Player(self.screen, 'amogus')
         
         running = True
-
         clock = pygame.time.Clock()
 
         while running:
 
             self.screen.fill('white')
-            clock.tick(120)
+            clock.tick(150)
 
             plyr.process_keys()
             plyr.display()
