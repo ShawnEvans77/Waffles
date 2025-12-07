@@ -1,7 +1,7 @@
 import pygame 
 import sprite_sheet as ss
 import settings
-import player
+import player as p
 
 class Game:
     def __init__(self):
@@ -10,17 +10,18 @@ class Game:
         pygame.display.set_caption('Waffles')
 
     def run(self):
-        plyr = player.Player(self.screen, 'amogus')
-        
+        plyr = p.Player(self.screen, 'frog')
         running = True
         clock = pygame.time.Clock()
 
         while running:
-
             self.screen.fill('white')
-            clock.tick(150)
+            clock.tick(300)
 
-            plyr.process_keys()
+            key = pygame.key.get_pressed()
+
+            plyr.move(key)
+            
             plyr.display()
 
             for event in pygame.event.get():

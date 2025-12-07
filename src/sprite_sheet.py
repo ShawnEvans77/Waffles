@@ -40,3 +40,6 @@ class SpriteSheet():
         current_img = self.frames[self.i]
         self.i += 1
         return current_img
+    
+    def __len__(self):
+        return len(self.frames)

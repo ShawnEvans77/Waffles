@@ -21,7 +21,7 @@ class Player():
         self.y = 0
 
         self.last_update = pygame.time.get_ticks()
-        self.animation_cooldown = 75
+        self.animation_cooldown = 50
         self.frame = 0
 
     def add_frames(self, file_path: str):
@@ -32,11 +32,9 @@ class Player():
 
         self.frames[state] = list
 
-    def process_keys(self):
-        key = pygame.key.get_pressed()
-
+    def move(self, key):
         dx, dy = 0, 0
-
+    
         if key[pygame.K_LEFT] and self.x > 0:
             dx = -Player.VEL
             self.x += dx
@@ -63,12 +61,9 @@ class Player():
             self.frame += 1
             self.last_update = self.current_time
 
-            if self.frame >= len(self.frames[self.state]):
-                self.frame = 0
+        if self.frame >= len(self.frames[self.state]):
+            self.frame = 0
 
-        print(f"FRAME LIST LENGTH: {len(self.frames[self.state])} CURRENT FRAME: {self.frame}")
-        print(f"STATE IS: {self.state}")
-        
         image = self.frames[self.state][self.frame]
 
         match self.face_right:
