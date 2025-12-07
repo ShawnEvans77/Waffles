@@ -1,4 +1,4 @@
-import pygame #type: ignore
+import pygame
 import sprite_sheet as ss
 import settings
 
@@ -10,7 +10,6 @@ class Player():
 
     def __init__(self, screen, skin: str):
         self.frames = {}
-
         self.add_frames(f'assets/{skin}/idle.png')
         self.add_frames(f'assets/{skin}/run.png')
 
@@ -35,6 +34,7 @@ class Player():
 
     def process_keys(self):
         key = pygame.key.get_pressed()
+
         dx, dy = 0, 0
 
         if key[pygame.K_LEFT] and self.x > 0:
@@ -51,7 +51,7 @@ class Player():
         if key[pygame.K_DOWN] and self.y < settings.WINDOW_HEIGHT - 100:
             dy = Player.VEL
             self.y += dy
-        
+
         match dx:
             case 0: self.state = Player.IDLE
             case _: self.state = Player.RUN
@@ -62,14 +62,17 @@ class Player():
         if self.current_time - self.last_update >= self.animation_cooldown:
             self.frame += 1
             self.last_update = self.current_time
-                
+
             if self.frame >= len(self.frames[self.state]):
                 self.frame = 0
 
+        print(f"FRAME LIST LENGTH: {len(self.frames[self.state])} CURRENT FRAME: {self.frame}")
+        print(f"STATE IS: {self.state}")
+        
         image = self.frames[self.state][self.frame]
 
         match self.face_right:
             case False: out_frame = pygame.transform.flip(image, True, False)
             case True: out_frame = image
                 
-        self.screen.blit(image, (self.x, self.y))
+        self.screen.blit(out_frame, (self.x, self.y))

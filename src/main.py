@@ -1,4 +1,4 @@
-import pygame #type: ignore
+import pygame 
 import sprite_sheet as ss
 import settings
 import player
