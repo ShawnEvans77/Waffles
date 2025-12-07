@@ -21,7 +21,6 @@ class Game:
             key = pygame.key.get_pressed()
 
             plyr.move(key)
-            
             plyr.display()
 
             for event in pygame.event.get():

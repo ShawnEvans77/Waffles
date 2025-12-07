@@ -6,7 +6,7 @@ class Player():
 
     IDLE = 'idle'
     RUN = 'run'
-    VEL = 2
+    VEL = 1
 
     def __init__(self, screen, skin: str):
         self.frames = {}
