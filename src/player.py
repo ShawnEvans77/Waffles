@@ -24,6 +24,8 @@ class Player():
         self.animation_cooldown = 50
         self.frame = 0
 
+        self.rect = self.frames[self.state][self.frame].get_rect()
+
     def add_frames(self, file_path: str):
         state = file_path[file_path.rfind('/')+1:file_path.index('.')]
 
@@ -75,3 +77,6 @@ class Player():
             case True: out_frame = image
                 
         self.screen.blit(out_frame, (self.x, self.y))
+
+        self.rect.x = self.x
+        self.rect.y = self.y
