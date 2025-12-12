@@ -35,7 +35,7 @@ class Player():
         self.frames[state] = list
 
     def gravity(self):
-        if self.y < settings.WINDOW_HEIGHT - 100:
+        if self.y < settings.BOTTOM_BORDER:
             self.y += Player.VEL
 
     def move(self, key):
