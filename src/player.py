@@ -41,17 +41,17 @@ class Player():
     def move(self, key):
         dx, dy = 0, 0
     
-        if key[pygame.K_LEFT] and self.x > 0:
+        if key[pygame.K_LEFT] and self.x > settings.LEFT_BORDER:
             dx = -Player.VEL
             self.x += dx
             self.face_right = False
-        if key[pygame.K_RIGHT] and self.x < settings.WINDOW_WIDTH - 100:
+        if key[pygame.K_RIGHT] and self.x < settings.RIGHT_BORDER:
             dx = Player.VEL
             self.x += dx
             self.face_right = True
-        if key[pygame.K_UP] and self.y > 0:
-            dy = -Player.VEL
-            self.y += dy
+        # if key[pygame.K_UP] and self.y > 0:
+        #     dy = -Player.VEL
+        #     self.y += dy
         # if key[pygame.K_DOWN] and self.y < settings.WINDOW_HEIGHT - 100:
         #     dy = Player.VEL
         #     self.y += dy
