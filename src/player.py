@@ -52,9 +52,9 @@ class Player():
         if key[pygame.K_UP] and self.y > 0:
             dy = -Player.VEL
             self.y += dy
-        if key[pygame.K_DOWN] and self.y < settings.WINDOW_HEIGHT - 100:
-            dy = Player.VEL
-            self.y += dy
+        # if key[pygame.K_DOWN] and self.y < settings.WINDOW_HEIGHT - 100:
+        #     dy = Player.VEL
+        #     self.y += dy
 
         match dx:
             case 0: self.state = Player.IDLE
