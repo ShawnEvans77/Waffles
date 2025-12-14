@@ -21,6 +21,7 @@ class Game:
             key = pygame.key.get_pressed()
 
             floor = pygame.draw.rect(self.screen, 'darkgreen', pygame.Rect(100, 350, 670, 35))
+            platform = pygame.draw.rect(self.screen, 'blue', pygame.Rect(900, 350, 350, 35))
 
             plyr.gravity(floor)
 
