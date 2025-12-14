@@ -1,16 +1,16 @@
 import pygame 
 import sprite_sheet as ss
-import settings
+import game_settings
 import player as p
 
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode(settings.SIZE)
+        self.screen = pygame.display.set_mode(game_settings.SIZE)
         pygame.display.set_caption('Waffles')
 
     def run(self):
-        plyr = p.Player(self.screen, 'frog')
+        plyr = p.Player(self.screen)
         running = True
         clock = pygame.time.Clock()
 

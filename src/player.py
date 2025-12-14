@@ -1,35 +1,24 @@
 import pygame
 import sprite_sheet as ss
-import settings
+import game_settings
+import player_settings
 
 class Player():
 
-    IDLE = 'idle'
-    RUN = 'run'
-    JUMP = 'jump'
-    FALL = 'fall'
-
-    SPEED = 1
-    JUMP_STRENGTH = 5
-
-    JUMP_HEIGHT = -400
-    GRAVITY = 1.5
-
-    def __init__(self, screen, skin: str):
+    def __init__(self, screen):
         self.frames = {}
 
         self.x, self.y = 0, 0
 
-        self.add_frames(f'assets/{skin}/idle.png')
-        self.add_frames(f'assets/{skin}/run.png')
-        self.add_frames(f'assets/{skin}/jump.png')
-        self.add_frames(f'assets/{skin}/fall.png')
+        self.add_frames(f'assets/{player_settings.SKIN}/idle.png')
+        self.add_frames(f'assets/{player_settings.SKIN}/run.png')
+        self.add_frames(f'assets/{player_settings.SKIN}/jump.png')
+        self.add_frames(f'assets/{player_settings.SKIN}/fall.png')
 
         self.screen = screen
+        self.state = player_settings.IDLE
 
-        self.state = Player.IDLE
         self.jump = False
-
         self.face_right = True
         self.grounded = False
 
@@ -58,8 +47,8 @@ class Player():
 
     def gravity(self):
 
-        if self.y < settings.BOTTOM_BORDER:
-            self.y += Player.GRAVITY
+        if self.y < game_settings.BOTTOM_BORDER:
+            self.y += player_settings.GRAVITY
             self.grounded = False
         else:
             self.grounded = True
@@ -69,29 +58,29 @@ class Player():
         self.horizontal_velocity = 0
         self.vertical_velocity = 0
 
-        if key[pygame.K_LEFT] and self.x > settings.LEFT_BORDER:
+        if key[pygame.K_LEFT] and self.x > game_settings.LEFT_BORDER:
 
-            self.horizontal_velocity = -Player.SPEED
+            self.horizontal_velocity = -player_settings.SPEED
             self.x += self.horizontal_velocity
             self.face_right = False
 
-        if key[pygame.K_RIGHT] and self.x < settings.RIGHT_BORDER:
+        if key[pygame.K_RIGHT] and self.x < game_settings.RIGHT_BORDER:
 
-            self.horizontal_velocity = Player.SPEED
+            self.horizontal_velocity = player_settings.SPEED
             self.x += self.horizontal_velocity 
             self.face_right = True
 
-        if key[pygame.K_SPACE]:
+        if key[pygame.K_SPACE] and self.grounded == True:
 
             self.jump = True
             self.is_grounded = False
-            self.vertical_velocity = Player.JUMP_STRENGTH
+            self.vertical_velocity = player_settings.JUMP_STRENGTH
 
         if self.jump:
 
-            if self.jump_length >= Player.JUMP_HEIGHT:
+            if self.jump_length >= player_settings.JUMP_HEIGHT:
 
-                self.vertical_velocity = -Player.JUMP_STRENGTH
+                self.vertical_velocity = -player_settings.JUMP_STRENGTH
                 self.y += self.vertical_velocity       
                 self.jump_length += self.vertical_velocity
 
@@ -100,41 +89,14 @@ class Player():
                 self.jump = False
                 self.jump_length = 0
                 
-
-       
-
-
-        # if self.jump:
-
-        #     if self.velocity >= Player.JUMP_HEIGHT:
-
-        #         self.jump_power = -4
-        #         self.y += self.jump_power
-        #         self.velocity += self.jump_power
-
-        #     else:
-        #         self.grounded = True
-
-        # if key[pygame.K_UP] and self.y > 0:
-        #     dy = -Player.VEL
-        #     self.y += dy
-
-        # if key[pygame.K_DOWN] and self.y < settings.WINDOW_HEIGHT - 100:
-        #     dy = Player.VEL
-        #     self.y += dy
-
-        # match dx:
-        #     case 0: self.state = Player.IDLE
-        #     case _: self.state = Player.RUN
-
     def check_state(self):
         if self.grounded: 
-            return Player.IDLE if self.horizontal_velocity == 0 else Player.RUN
+            return player_settings.IDLE if self.horizontal_velocity == 0 else player_settings.RUN
         
         elif not self.grounded and not self.jump:
-            return Player.FALL
+            return player_settings.FALL
         elif not self.grounded and self.jump:
-            return Player.JUMP
+            return player_settings.JUMP
         
 
     def display(self):
