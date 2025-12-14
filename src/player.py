@@ -44,16 +44,25 @@ class Player():
 
         self.frames[state] = list
 
-    def gravity(self, rect):
+    def gravity(self, platforms):
 
-        if self.y < game_settings.BOTTOM_BORDER and not pygame.Rect.colliderect(self.rect, rect):
+        if self.y < game_settings.BOTTOM_BORDER and not self.collision(platforms):
 
             self.vertical_velocity = player_settings.GRAVITY
             self.y += self.vertical_velocity
             self.grounded = False
+
         else:
             self.grounded = True
             self.vertical_velocity = 0
+
+    def collision(self, platforms) -> bool:
+
+        for platform in platforms:
+            if pygame.Rect.colliderect(self.rect, platform):
+                return True
+            
+        return False
 
     def move(self, key):
 

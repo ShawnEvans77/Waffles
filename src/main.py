@@ -14,16 +14,18 @@ class Game:
         running = True
         clock = pygame.time.Clock()
 
+        platforms = []
+
         while running:
             self.screen.fill('white')
             clock.tick(300)
 
             key = pygame.key.get_pressed()
 
-            floor = pygame.draw.rect(self.screen, 'darkgreen', pygame.Rect(100, 350, 670, 35))
-            platform = pygame.draw.rect(self.screen, 'blue', pygame.Rect(900, 350, 350, 35))
+            platforms.append(pygame.draw.rect(self.screen, 'darkgreen', pygame.Rect(100, 350, 670, 35)))
+            platforms.append(pygame.draw.rect(self.screen, 'blue', pygame.Rect(900, 350, 350, 35)))
 
-            plyr.gravity(floor)
+            plyr.gravity(platforms)
 
             plyr.move(key)
             plyr.display()
