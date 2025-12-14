@@ -11,7 +11,7 @@ class Player():
 
     VEL = 1
 
-    JUMP_HEIGHT = -20
+    JUMP_HEIGHT = -400
 
     GRAVITY = 1
 
@@ -26,6 +26,8 @@ class Player():
         self.screen = screen
         self.state = Player.IDLE
         self.face_right = True
+
+        self.grounded = False
 
         self.x, self.y = 0, 0
 
@@ -53,11 +55,14 @@ class Player():
         if self.y < settings.BOTTOM_BORDER:
             self.y += Player.GRAVITY
             self.state = Player.FALL
+        else:
+            self.state = Player.IDLE
+            self.grounded = True
 
     def move(self, key):
         dx, dy = 0, 0
 
-    
+
         if key[pygame.K_LEFT] and self.x > settings.LEFT_BORDER:
 
             dx = -Player.VEL
@@ -80,7 +85,7 @@ class Player():
 
             if self.velocity >= Player.JUMP_HEIGHT:
 
-                self.jump_power = -2
+                self.jump_power = -3
 
                 self.y += self.jump_power
 
