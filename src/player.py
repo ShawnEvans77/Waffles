@@ -48,13 +48,10 @@ class Player():
     def gravity(self):
 
         if self.y < game_settings.BOTTOM_BORDER:
-
             self.vertical_velocity = player_settings.GRAVITY
             self.y += self.vertical_velocity
             self.grounded = False
-
         else:
-
             self.grounded = True
             self.veritcal_velocity = 0
 
@@ -83,13 +80,10 @@ class Player():
         if self.jump:
 
             if self.jump_length >= player_settings.JUMP_HEIGHT:
-
                 self.vertical_velocity = -player_settings.JUMP_STRENGTH
                 self.y += self.vertical_velocity       
                 self.jump_length += self.vertical_velocity
-
             else:
-
                 self.jump = False
                 self.jump_length = 0
                 
