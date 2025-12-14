@@ -48,15 +48,19 @@ class Player():
     def gravity(self):
 
         if self.y < game_settings.BOTTOM_BORDER:
-            self.y += player_settings.GRAVITY
+
+            self.vertical_velocity = player_settings.GRAVITY
+            self.y += self.vertical_velocity
             self.grounded = False
+
         else:
+
             self.grounded = True
+            self.veritcal_velocity = 0
 
     def move(self, key):
 
         self.horizontal_velocity = 0
-        self.vertical_velocity = 0
 
         if key[pygame.K_LEFT] and self.x > game_settings.LEFT_BORDER:
 
@@ -93,12 +97,9 @@ class Player():
         if self.grounded: 
             return player_settings.IDLE if self.horizontal_velocity == 0 else player_settings.RUN
         
-        elif not self.grounded and not self.jump:
-            return player_settings.FALL
-        elif not self.grounded and self.jump:
-            return player_settings.JUMP
-        
-
+        if not self.grounded: 
+            return player_settings.FALL if not self.jump else player_settings.JUMP
+ 
     def display(self):
         self.current_time = pygame.time.get_ticks()
 
@@ -118,6 +119,8 @@ class Player():
             case True: out_frame = image
                 
         self.screen.blit(out_frame, (self.x, self.y))
+
+        print(self.x, self.y)
 
         self.rect.x = self.x
         self.rect.y = self.y
