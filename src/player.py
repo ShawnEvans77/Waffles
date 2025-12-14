@@ -86,6 +86,10 @@ class Player():
             self.is_grounded = False
             self.vertical_velocity = player_settings.JUMP_STRENGTH
 
+        if key[pygame.K_r]:
+            self.x = 0
+            self.y = 0
+
         if self.jump:
 
             if self.jump_length >= player_settings.JUMP_HEIGHT:

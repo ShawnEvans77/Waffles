@@ -22,7 +22,7 @@ class Game:
 
             key = pygame.key.get_pressed()
 
-            platforms.append(pygame.draw.rect(self.screen, 'darkgreen', pygame.Rect(100, 350, 670, 35)))
+            platforms.append(pygame.draw.rect(self.screen, 'darkgreen', pygame.Rect(100, 350, 520, 35)))
             platforms.append(pygame.draw.rect(self.screen, 'blue', pygame.Rect(900, 350, 350, 35)))
 
             plyr.gravity(platforms)
