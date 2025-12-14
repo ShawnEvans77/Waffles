@@ -33,7 +33,6 @@ class Player():
         self.horizontal_velocity = 0
         self.vertical_velocity = 0
 
-
         self.jump_length = 0
 
     def add_frames(self, file_path: str):
@@ -45,15 +44,16 @@ class Player():
 
         self.frames[state] = list
 
-    def gravity(self):
+    def gravity(self, rect):
 
-        if self.y < game_settings.BOTTOM_BORDER:
+        if self.y < game_settings.BOTTOM_BORDER and not pygame.Rect.colliderect(self.rect, rect):
+
             self.vertical_velocity = player_settings.GRAVITY
             self.y += self.vertical_velocity
             self.grounded = False
         else:
             self.grounded = True
-            self.veritcal_velocity = 0
+            self.vertical_velocity = 0
 
     def move(self, key):
 
