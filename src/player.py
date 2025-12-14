@@ -85,7 +85,7 @@ class Player():
 
             if self.velocity >= Player.JUMP_HEIGHT:
 
-                self.jump_power = -3
+                self.jump_power = -4
 
                 self.y += self.jump_power
 
