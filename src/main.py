@@ -19,12 +19,9 @@ class Game:
             clock.tick(300)
 
             key = pygame.key.get_pressed()
-            floor = pygame.draw.rect(self.screen, 'darkgreen', pygame.Rect(200, 350, 870, 100))
+            # floor = pygame.draw.rect(self.screen, 'darkgreen', pygame.Rect(200, 350, 670, 35))
 
-            print(plyr.rect)
-
-            if not floor.colliderect(plyr.rect):
-                plyr.gravity()
+            plyr.gravity()
 
             plyr.move(key)
             plyr.display()
