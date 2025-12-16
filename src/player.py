@@ -127,7 +127,5 @@ class Player():
                 
         self.screen.blit(out_frame, (self.x, self.y))
 
-        print(self.x, self.y)
-
         self.rect.x = self.x
         self.rect.y = self.y
