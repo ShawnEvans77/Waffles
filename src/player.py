@@ -1,131 +1,100 @@
+import spritesheet as ss
+import player_settings as ps
+import window_settings as ws
+import vector as v
 import pygame
-import sprite_sheet as ss
-import game_settings
-import player_settings
 
-class Player():
+class Player:
 
-    def __init__(self, screen):
-        self.frames = {}
-
-        self.x, self.y = 0, 0
-
-        self.add_frames(f'assets/{player_settings.SKIN}/idle.png')
-        self.add_frames(f'assets/{player_settings.SKIN}/run.png')
-        self.add_frames(f'assets/{player_settings.SKIN}/jump.png')
-        self.add_frames(f'assets/{player_settings.SKIN}/fall.png')
-
+    def __init__(self, screen, skin):
         self.screen = screen
-        self.state = player_settings.IDLE
-
-        self.jump = False
-        self.face_right = True
-        self.grounded = False
-
+        self.sheet = ss.SpriteSheet(skin).get()
         self.last_update = pygame.time.get_ticks()
 
-        self.animation_cooldown = 50
-
+        self.x, self.y = 0, 0
+        self.vel = v.Vector(0,0)
         self.frame = 0
 
-        self.rect = self.frames[self.state][self.frame].get_rect()
+        self.falling = True
+        self.jumping = False
+        self.grounded = False
+        self.walking = False
+        self.face_right = True
 
-        self.horizontal_velocity = 0
-        self.vertical_velocity = 0
+        self.jump_velocity = ((2.0 * ps.JUMP_HEIGHT) / ps.JUMP_PEAKTIME) * -1
+        self.jump_gravity = ((-2.0 * ps.JUMP_HEIGHT) / (ps.JUMP_PEAKTIME * ps.JUMP_PEAKTIME)) 
+        self.fall_gravity = ((-2.0 * ps.JUMP_HEIGHT) / (ps.JUMP_DESCENTTIME * ps.JUMP_DESCENTTIME)) 
+        
+        self.state = self.check_state()
 
-        self.jump_length = 0
+    def update(self, key):
+        self.physics(key)
+        self.display()
 
-    def add_frames(self, file_path: str):
+    def physics(self, key):
+        self.vel.y = self.get_gravity()
+        self.vel.x = self.get_input_velocity(key) * ps.SPEED
 
-        state = file_path[file_path.rfind('/')+1:file_path.index('.')]
+        if key[pygame.K_SPACE] and self.grounded and not self.jumping:
+            self.jump()
 
-        sheet = ss.SpriteSheet(file_path)
-        list = [frame for frame in sheet]
+    def jump(self):
+        self.vel.y = self.jump_velocity
 
-        self.frames[state] = list
+    def get_gravity(self):
+        if self.y > ws.BOTTOM_BORDER:
+            return 0
 
-    def gravity(self, platforms):
+        if self.vel.y < 0:
+            return self.vel.y + self.jump_gravity
 
-        if self.y < game_settings.BOTTOM_BORDER and not self.collision(platforms):
+        return self.vel.y + self.fall_gravity
+                    
+    def get_input_velocity(self, key):
+        horizontal_vel = 0
 
-            self.vertical_velocity = player_settings.GRAVITY
-            self.y += self.vertical_velocity
-            self.grounded = False
-
-        else:
-            self.grounded = True
-            self.vertical_velocity = 0
-
-    def collision(self, platforms) -> bool:
-
-        for platform in platforms:
-            if pygame.Rect.colliderect(self.rect, platform):
-                return True
-            
-        return False
-
-    def move(self, key):
-
-        self.horizontal_velocity = 0
-
-        if key[pygame.K_LEFT] and self.x > game_settings.LEFT_BORDER:
-
-            self.horizontal_velocity = -player_settings.SPEED
-            self.x += self.horizontal_velocity
+        if key[pygame.K_LEFT] and self.x > ws.LEFT_BORDER:
+            horizontal_vel -= 1
             self.face_right = False
 
-        if key[pygame.K_RIGHT] and self.x < game_settings.RIGHT_BORDER:
-
-            self.horizontal_velocity = player_settings.SPEED
-            self.x += self.horizontal_velocity 
+        if key[pygame.K_RIGHT] and self.x < ws.RIGHT_BORDER:
+            horizontal_vel += 1
             self.face_right = True
 
-        if key[pygame.K_SPACE] and self.grounded == True:
+        self.walking = True if horizontal_vel != 0 else False
 
-            self.jump = True
-            self.is_grounded = False
-            self.vertical_velocity = player_settings.JUMP_STRENGTH
-
-        if key[pygame.K_r]:
-            self.x = 0
-            self.y = 0
-
-        if self.jump:
-
-            if self.jump_length >= player_settings.JUMP_HEIGHT:
-                self.vertical_velocity = -player_settings.JUMP_STRENGTH
-                self.y += self.vertical_velocity       
-                self.jump_length += self.vertical_velocity
-            else:
-                self.jump = False
-                self.jump_length = 0
-                
+        return horizontal_vel
+    
     def check_state(self):
-        if self.grounded: 
-            return player_settings.IDLE if self.horizontal_velocity == 0 else player_settings.RUN
+
+        if self.vel.y == 0:
+            return ps.IDLE if self.vel.x == 0 else ps.RUNNING
         
-        if not self.grounded: 
-            return player_settings.FALL if not self.jump else player_settings.JUMP
- 
+        if self.vel.y != 0:
+            return ps.FALLING if not self.vel.y < 0 else ps.JUMPING
+        
+    def correct_direction(self, image):
+
+        return image if self.face_right else pygame.transform.flip(image, True, False)
+
     def display(self):
         self.current_time = pygame.time.get_ticks()
 
         self.state = self.check_state()
 
-        if self.current_time - self.last_update >= self.animation_cooldown:
+        if self.current_time - self.last_update >= ps.ANIMATION_COOLDOWN:
             self.frame += 1
             self.last_update = self.current_time
 
-        if self.frame >= len(self.frames[self.state]):
+        if self.frame >= len(self.sheet[self.state]):
             self.frame = 0
 
-        image = self.frames[self.state][self.frame]
+        image = self.correct_direction(self.sheet[self.state][self.frame])
 
-        match self.face_right:
-            case False: out_frame = pygame.transform.flip(image, True, False)
-            case True: out_frame = image
-                
-        self.screen.blit(out_frame, (self.x, self.y))
+        self.x += self.vel.x
+        self.y += self.vel.y
 
-        self.rect.x = self.x
-        self.rect.y = self.y
+
+        print(self.x, self.y)
+
+        self.screen.blit(image, (self.x, self.y))

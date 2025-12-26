@@ -1,33 +1,30 @@
-import pygame 
-import sprite_sheet as ss
-import game_settings
+import pygame
+import window_settings
+import spritesheet as ss
 import player as p
 
 class Game:
+    '''
+    A class responsible for executing the game. 
+    '''
+
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode(game_settings.SIZE)
-        pygame.display.set_caption('Waffles')
+        self.screen = pygame.display.set_mode(window_settings.SIZE)
+        pygame.display.set_caption('waffles')
+        self.clock = pygame.time.Clock()
 
     def run(self):
-        plyr = p.Player(self.screen)
         running = True
-        clock = pygame.time.Clock()
-
-        platforms = []
+        player = p.Player(self.screen, 'frog')
 
         while running:
-            self.screen.fill('white')
-            clock.tick(300)
 
             key = pygame.key.get_pressed()
+            self.screen.fill('white')
 
-            platforms.append(pygame.draw.rect(self.screen, 'darkgreen', pygame.Rect(100, 350, 520, 35)))
-            platforms.append(pygame.draw.rect(self.screen, 'blue', pygame.Rect(900, 350, 350, 35)))
-            plyr.gravity(platforms)
-
-            plyr.move(key)
-            plyr.display()
+            player.update(key)
+            self.clock.tick(300)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

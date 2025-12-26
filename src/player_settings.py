@@ -1,12 +1,22 @@
+HEIGHT = 32
+WIDTH = 32
+SCALE = 3
+
+SIZE = (HEIGHT, WIDTH)
+
 IDLE = 'idle'
-RUN = 'run'
-JUMP = 'jump'
-FALL = 'fall'
+FALLING = 'fall'
+JUMPING = 'jump'
+RUNNING = 'run'
 
 SPEED = 1
-JUMP_STRENGTH = 3
 
-JUMP_HEIGHT = -400
-GRAVITY = 1.50
+ANIMATION_COOLDOWN = 50
 
-SKIN = 'frog'
+COLOR = 'black'
+
+JUMP_HEIGHT = 4
+JUMP_PEAKTIME = 0.4
+JUMP_DESCENTTIME = 0.3
+
+GRAVITY = 1
