@@ -12,7 +12,7 @@ class Player:
         self.last_update = pygame.time.get_ticks()
 
         self.x, self.y = 0, 0
-        self.vel = v.Vector(0,0)
+        self.vel = v.Vector(0,1)
         self.frame = 0
 
         self.falling = True
@@ -21,10 +21,10 @@ class Player:
         self.walking = False
         self.face_right = True
 
-        self.jump_velocity = ((2.0 * ps.JUMP_HEIGHT) / ps.JUMP_PEAKTIME) * -1
-        self.jump_gravity = ((-2.0 * ps.JUMP_HEIGHT) / (ps.JUMP_PEAKTIME * ps.JUMP_PEAKTIME)) 
-        self.fall_gravity = ((-2.0 * ps.JUMP_HEIGHT) / (ps.JUMP_DESCENTTIME * ps.JUMP_DESCENTTIME)) 
-        
+        self.jump_velocity = ((2.0 * ps.JUMP_HEIGHT) / ps.JUMP_PEAKTIME) * -1.0
+        self.jump_gravity = ((-2.0 * ps.JUMP_HEIGHT) / (ps.JUMP_PEAKTIME * ps.JUMP_PEAKTIME))  * -1.0
+        self.fall_gravity = ((-2.0 * ps.JUMP_HEIGHT) / (ps.JUMP_DESCENTTIME * ps.JUMP_DESCENTTIME)) * -1.0
+
         self.state = self.check_state()
 
     def update(self, key):
@@ -32,24 +32,26 @@ class Player:
         self.display()
 
     def physics(self, key):
-        self.vel.y = self.get_gravity()
+
+        if self.y < ws.BOTTOM_BORDER:
+            self.vel.y += self.get_gravity() / 4
+        else:
+            self.vel.y = 0
+
+        if key[pygame.K_SPACE] and self.vel.y == 0:
+            self.jump()
+
         self.vel.x = self.get_input_velocity(key) * ps.SPEED
 
-        if key[pygame.K_SPACE] and self.grounded and not self.jumping:
-            self.jump()
+    def on_floor(self):
+        return self.y > ws.BOTTOM_BORDER
 
     def jump(self):
         self.vel.y = self.jump_velocity
 
     def get_gravity(self):
-        if self.y > ws.BOTTOM_BORDER:
-            return 0
+        return self.jump_gravity if self.vel.y < 0 else self.fall_gravity
 
-        if self.vel.y < 0:
-            return self.vel.y + self.jump_gravity
-
-        return self.vel.y + self.fall_gravity
-                    
     def get_input_velocity(self, key):
         horizontal_vel = 0
 
@@ -93,8 +95,5 @@ class Player:
 
         self.x += self.vel.x
         self.y += self.vel.y
-
-
-        print(self.x, self.y)
 
         self.screen.blit(image, (self.x, self.y))
