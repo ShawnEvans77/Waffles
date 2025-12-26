@@ -41,9 +41,8 @@ class Player:
             self.falling = False
             self.grounded = True
 
-        if key[pygame.K_SPACE] and not self.jumping:
+        if key[pygame.K_SPACE] and self.on_floor():
             self.jumping = True
-            self.jump()
 
         if self.jumping:
             self.jump()
@@ -81,10 +80,10 @@ class Player:
     def check_state(self):
 
         if self.vel.y == 0:
-            return ps.IDLE if not self.walking else ps.RUNNING
+            return ps.IDLE if self.vel.x == 0 else ps.RUNNING
         
         if self.vel.y != 0:
-            return ps.FALLING if self.falling else ps.JUMPING
+            return ps.FALLING if self.vel.y > 0 else ps.JUMPING
         
     def correct_direction(self, image):
 
