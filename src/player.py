@@ -21,9 +21,9 @@ class Player:
         self.walking = False
         self.face_right = True
 
-        self.jump_velocity = ((2.0 * ps.JUMP_HEIGHT) / ps.JUMP_PEAKTIME) * -1.0
-        self.jump_gravity = ((-2.0 * ps.JUMP_HEIGHT) / (ps.JUMP_PEAKTIME * ps.JUMP_PEAKTIME))  * -1.0
-        self.fall_gravity = ((-2.0 * ps.JUMP_HEIGHT) / (ps.JUMP_DESCENTTIME * ps.JUMP_DESCENTTIME)) * -1.0
+        # self.jump_velocity = ((2.0 * ps.JUMP_HEIGHT) / ps.JUMP_PEAKTIME) * -1.0
+        # self.jump_gravity = ((-2.0 * ps.JUMP_HEIGHT) / (ps.JUMP_PEAKTIME * ps.JUMP_PEAKTIME))  * -1.0
+        # self.fall_gravity = ((-2.0 * ps.JUMP_HEIGHT) / (ps.JUMP_DESCENTTIME * ps.JUMP_DESCENTTIME)) * -1.0
 
         self.state = self.check_state()
 
@@ -33,12 +33,19 @@ class Player:
 
     def physics(self, key):
 
-        if self.y < ws.BOTTOM_BORDER:
-            self.vel.y += self.get_gravity() / 4
-        else:
+        if not self.on_floor() and not self.jumping:
+            self.vel.y += ps.GRAVITY
+            self.falling = True
+        elif self.on_floor():
             self.vel.y = 0
+            self.falling = False
+            self.grounded = True
 
-        if key[pygame.K_SPACE] and self.vel.y == 0:
+        if key[pygame.K_SPACE] and not self.jumping:
+            self.jumping = True
+            self.jump()
+
+        if self.jumping:
             self.jump()
 
         self.vel.x = self.get_input_velocity(key) * ps.SPEED
@@ -47,7 +54,11 @@ class Player:
         return self.y > ws.BOTTOM_BORDER
 
     def jump(self):
-        self.vel.y = self.jump_velocity
+        if self.vel.y > ps.JUMP_HEIGHT:
+            self.vel.y -= ps.JUMP_STRENGTH
+        else:
+            self.falling = True
+            self.jumping = False
 
     def get_gravity(self):
         return self.jump_gravity if self.vel.y < 0 else self.fall_gravity
@@ -70,10 +81,10 @@ class Player:
     def check_state(self):
 
         if self.vel.y == 0:
-            return ps.IDLE if self.vel.x == 0 else ps.RUNNING
+            return ps.IDLE if not self.walking else ps.RUNNING
         
         if self.vel.y != 0:
-            return ps.FALLING if not self.vel.y < 0 else ps.JUMPING
+            return ps.FALLING if self.falling else ps.JUMPING
         
     def correct_direction(self, image):
 
@@ -95,5 +106,7 @@ class Player:
 
         self.x += self.vel.x
         self.y += self.vel.y
+
+        print(self.state)
 
         self.screen.blit(image, (self.x, self.y))
