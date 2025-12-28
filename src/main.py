@@ -2,6 +2,7 @@ import pygame
 import window_settings
 import spritesheet as ss
 import player as p
+import stage as s
 
 class Game:
     '''
@@ -16,12 +17,15 @@ class Game:
 
     def run(self):
         running = True
-        player = p.Player(self.screen, 'frog')
+        stage = s.Stage(self.screen)
+        player = p.Player(self.screen, 'frog', stage)
 
         while running:
 
             key = pygame.key.get_pressed()
             self.screen.fill('white')
+
+            stage.draw()
 
             player.update(key)
             self.clock.tick(300)

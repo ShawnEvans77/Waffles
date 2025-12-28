@@ -3,10 +3,11 @@ import player_settings as ps
 import window_settings as ws
 import vector as v
 import pygame
+import stage as s
 
 class Player:
 
-    def __init__(self, screen, skin):
+    def __init__(self, screen, skin, stage):
         self.screen = screen
         self.sheet = ss.SpriteSheet(skin).get()
         self.last_update = pygame.time.get_ticks()
@@ -15,6 +16,7 @@ class Player:
         self.vel = v.Vector(0,1)
         self.frame = 0
 
+        self.stage = stage
         self.falling = True
         self.jumping = False
         self.grounded = False
@@ -27,21 +29,23 @@ class Player:
 
         self.state = self.check_state()
 
+        self.rect = self.sheet[self.state][self.frame].get_rect()
+
     def update(self, key):
         self.physics(key)
         self.display()
 
     def physics(self, key):
 
-        if not self.on_floor() and not self.jumping:
+        if not self.on_floor() and not self.jumping and not self.touching_obstacle():
             self.vel.y += ps.GRAVITY
             self.falling = True
-        elif self.on_floor():
+        elif self.on_floor() or self.touching_obstacle():
             self.vel.y = 0
             self.falling = False
             self.grounded = True
 
-        if key[pygame.K_SPACE] and self.on_floor():
+        if key[pygame.K_SPACE] and (self.on_floor() or self.touching_obstacle()):
             self.jumping = True
 
         if self.jumping:
@@ -51,7 +55,15 @@ class Player:
 
     def on_floor(self):
         return self.y > ws.BOTTOM_BORDER
+    
+    def touching_obstacle(self):
 
+        for obstacle in self.stage.platforms:
+            if self.rect.colliderect(obstacle):
+                return True
+                        
+        return False
+ 
     def jump(self):
         if self.vel.y > ps.JUMP_HEIGHT:
             self.vel.y -= ps.JUMP_STRENGTH
@@ -103,9 +115,12 @@ class Player:
 
         image = self.correct_direction(self.sheet[self.state][self.frame])
 
+        self.rect = image.get_rect()
+
+        self.rect.x = self.x
+        self.rect.y = self.y
+
         self.x += self.vel.x
         self.y += self.vel.y
-
-        print(self.state)
 
         self.screen.blit(image, (self.x, self.y))
